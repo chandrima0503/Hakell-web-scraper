@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE OverloadedStrings #-}</span><span>
+</span><span id="line-2"></span><span class="hs-comment">{-|
+Module      : Database
+Description : Handles database creation along with queries for insertion and fetching data
+License     : GPL-3
+-}</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Database</span><span>
+</span><span id="line-9"></span><span>    </span><span class="hs-special">(</span><span> </span><span>
+</span><span id="line-10"></span><span>        </span><span class="annot"><a href="Database.html#initialiseDB"><span class="hs-identifier">initialiseDB</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-11"></span><span>        </span><span class="annot"><a href="Database.html#saveFetchedGames"><span class="hs-identifier">saveFetchedGames</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-12"></span><span>        </span><span class="annot"><a href="Database.html#queryAllGames"><span class="hs-identifier">queryAllGames</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-13"></span><span>        </span><span class="annot"><a href="Database.html#queryAllTeams"><span class="hs-identifier">queryAllTeams</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-14"></span><span>        </span><span class="annot"><a href="Database.html#querySelectedGames"><span class="hs-identifier">querySelectedGames</span></a></span><span>
+</span><span id="line-15"></span><span>    </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Database.SQLite.Simple</span></span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Types.html"><span class="hs-identifier">Types</span></a></span><span>
+</span><span id="line-19"></span><span>
+</span><span id="line-20"></span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- | Initialises the SQLite DB and creates table Games and Teams if not exists</span><span>
+</span><span id="line-22"></span><span class="annot"><a href="Database.html#initialiseDB"><span class="hs-identifier hs-type">initialiseDB</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Connection</span></span><span>
+</span><span id="line-23"></span><span id="initialiseDB"><span class="annot"><span class="annottext">initialiseDB :: IO Connection
+</span><a href="Database.html#initialiseDB"><span class="hs-identifier hs-var hs-var">initialiseDB</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-24"></span><span>        </span><span id="local-6989586621679100719"><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100719"><span class="hs-identifier hs-var">conn</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO Connection
+</span><span class="hs-identifier hs-var">open</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;NBA.sqlite&quot;</span></span><span>
+</span><span id="line-25"></span><span>        </span><span class="annot"><span class="annottext">Connection -&gt; Query -&gt; IO ()
+</span><span class="hs-identifier hs-var">execute_</span></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100719"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="annot"><span class="annottext">Query
+</span><span class="hs-string">&quot;CREATE TABLE IF NOT EXISTS teams (\
+            \id INTEGER PRIMARY KEY,\
+            \abbreviation VARCHAR(20),\
+            \city VARCHAR(50),\
+            \conference VARCHAR(50),\
+            \division VARCHAR(50),\
+            \full_name VARCHAR(50),\
+            \name VARCHAR(50)\
+            \)&quot;</span></span><span>
+</span><span id="line-34"></span><span>        </span><span class="annot"><span class="annottext">Connection -&gt; Query -&gt; IO ()
+</span><span class="hs-identifier hs-var">execute_</span></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100719"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="annot"><span class="annottext">Query
+</span><span class="hs-string">&quot;CREATE TABLE IF NOT EXISTS games (\
+            \id INTEGER PRIMARY KEY,\
+            \date VARCHAR(40) NOT NULL, \
+            \home_team_score INTEGER,\
+            \visitor_team_score INTEGER,\
+            \period INTEGER,\
+            \season INTEGER,\
+            \status VARCHAR(50),\
+            \home_team_fk INT,\
+            \visitor_team_fk INT,\
+            \UNIQUE(home_team_fk,visitor_team_fk,date)\
+            \)&quot;</span></span><span>
+</span><span id="line-46"></span><span>        </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100719"><span class="hs-identifier hs-var">conn</span></a></span><span>
+</span><span id="line-47"></span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- | Gets the team data if already present or creates and insert the given team</span><span>
+</span><span id="line-50"></span><span class="annot"><a href="Database.html#getOrCreateTeam"><span class="hs-identifier hs-type">getOrCreateTeam</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Connection</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Types.html#TeamForParse"><span class="hs-identifier hs-type">TeamForParse</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-51"></span><span id="getOrCreateTeam"><span class="annot"><span class="annottext">getOrCreateTeam :: Connection -&gt; TeamForParse -&gt; IO ()
+</span><a href="Database.html#getOrCreateTeam"><span class="hs-identifier hs-var hs-var">getOrCreateTeam</span></a></span></span><span> </span><span id="local-6989586621679100715"><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100715"><span class="hs-identifier hs-var">conn</span></a></span></span><span> </span><span id="local-6989586621679100714"><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100714"><span class="hs-identifier hs-var">team</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-52"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679100713"><span class="annot"><span class="annottext">team_data :: Team
+</span><a href="#local-6989586621679100713"><span class="hs-identifier hs-var hs-var">team_data</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Types.html#Team"><span class="hs-identifier hs-type">Team</span></a></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-53"></span><span>        </span><span class="annot"><span class="annottext">team_id_ :: Int
+</span><a href="Types.html#team_id_"><span class="hs-identifier hs-var">team_id_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TeamForParse -&gt; Int
+</span><a href="Types.html#_id"><span class="hs-identifier hs-var">_id</span></a></span><span> </span><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100714"><span class="hs-identifier hs-var">team</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-54"></span><span>        </span><span class="annot"><span class="annottext">abbreviation_ :: String
+</span><a href="Types.html#abbreviation_"><span class="hs-identifier hs-var">abbreviation_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#abbreviation"><span class="hs-identifier hs-var">abbreviation</span></a></span><span> </span><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100714"><span class="hs-identifier hs-var">team</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-55"></span><span>        </span><span class="annot"><span class="annottext">city_ :: String
+</span><a href="Types.html#city_"><span class="hs-identifier hs-var">city_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#city"><span class="hs-identifier hs-var">city</span></a></span><span> </span><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100714"><span class="hs-identifier hs-var">team</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-56"></span><span>        </span><span class="annot"><span class="annottext">conference_ :: String
+</span><a href="Types.html#conference_"><span class="hs-identifier hs-var">conference_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#conference"><span class="hs-identifier hs-var">conference</span></a></span><span> </span><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100714"><span class="hs-identifier hs-var">team</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-57"></span><span>        </span><span class="annot"><span class="annottext">division_ :: String
+</span><a href="#local-6989586621679100703"><span class="hs-identifier hs-var">division_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#division"><span class="hs-identifier hs-var">division</span></a></span><span> </span><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100714"><span class="hs-identifier hs-var">team</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-58"></span><span>        </span><span class="annot"><span class="annottext">full_name_ :: String
+</span><a href="#local-6989586621679100701"><span class="hs-identifier hs-var">full_name_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#full_name"><span class="hs-identifier hs-var">full_name</span></a></span><span> </span><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100714"><span class="hs-identifier hs-var">team</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-59"></span><span>        </span><span class="annot"><span class="annottext">name_ :: String
+</span><a href="#local-6989586621679100699"><span class="hs-identifier hs-var">name_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#name"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100714"><span class="hs-identifier hs-var">team</span></a></span><span>
+</span><span id="line-60"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-61"></span><span>    </span><span class="annot"><span class="annottext">forall q. ToRow q =&gt; Connection -&gt; Query -&gt; q -&gt; IO ()
+</span><span class="hs-identifier hs-var">execute</span></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100715"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="annot"><span class="annottext">Query
+</span><span class="hs-string">&quot;INSERT OR REPLACE INTO teams VALUES (?, ?, ?, ?, ?, ?, ?)&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Team
+</span><a href="#local-6989586621679100713"><span class="hs-identifier hs-var">team_data</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span>
+</span><span id="line-63"></span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- | Creates and insert a game entry in DB </span><span>
+</span><span id="line-65"></span><span class="annot"><a href="Database.html#createGame"><span class="hs-identifier hs-type">createGame</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Connection</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Types.html#GameForParse"><span class="hs-identifier hs-type">GameForParse</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span id="createGame"><span class="annot"><span class="annottext">createGame :: Connection -&gt; GameForParse -&gt; IO ()
+</span><a href="Database.html#createGame"><span class="hs-identifier hs-var hs-var">createGame</span></a></span></span><span> </span><span id="local-6989586621679100695"><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100695"><span class="hs-identifier hs-var">conn</span></a></span></span><span> </span><span id="local-6989586621679100694"><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100694"><span class="hs-identifier hs-var">game</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-67"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679100693"><span class="annot"><span class="annottext">home_team_data :: TeamForParse
+</span><a href="#local-6989586621679100693"><span class="hs-identifier hs-var hs-var">home_team_data</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">GameForParse -&gt; TeamForParse
+</span><a href="Types.html#home_team"><span class="hs-identifier hs-var">home_team</span></a></span><span> </span><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100694"><span class="hs-identifier hs-var">game</span></a></span><span>
+</span><span id="line-68"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679100691"><span class="annot"><span class="annottext">visitor_team_data :: TeamForParse
+</span><a href="#local-6989586621679100691"><span class="hs-identifier hs-var hs-var">visitor_team_data</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">GameForParse -&gt; TeamForParse
+</span><a href="Types.html#visitor_team"><span class="hs-identifier hs-var">visitor_team</span></a></span><span> </span><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100694"><span class="hs-identifier hs-var">game</span></a></span><span>
+</span><span id="line-69"></span><span>    </span><span id="local-6989586621679100689"><span class="annot"><span class="annottext">()
+</span><a href="#local-6989586621679100689"><span class="hs-identifier hs-var">home_team_created</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Connection -&gt; TeamForParse -&gt; IO ()
+</span><a href="Database.html#getOrCreateTeam"><span class="hs-identifier hs-var">getOrCreateTeam</span></a></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100695"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100693"><span class="hs-identifier hs-var">home_team_data</span></a></span><span>
+</span><span id="line-70"></span><span>    </span><span id="local-6989586621679100688"><span class="annot"><span class="annottext">()
+</span><a href="#local-6989586621679100688"><span class="hs-identifier hs-var">visitor_team_created</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Connection -&gt; TeamForParse -&gt; IO ()
+</span><a href="Database.html#getOrCreateTeam"><span class="hs-identifier hs-var">getOrCreateTeam</span></a></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100695"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100691"><span class="hs-identifier hs-var">visitor_team_data</span></a></span><span>
+</span><span id="line-71"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679100687"><span class="annot"><span class="annottext">game_data :: Game
+</span><a href="#local-6989586621679100687"><span class="hs-identifier hs-var hs-var">game_data</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Types.html#Game"><span class="hs-identifier hs-type">Game</span></a></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-72"></span><span>        </span><span class="annot"><span class="annottext">date_ :: String
+</span><a href="Types.html#date_"><span class="hs-identifier hs-var">date_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">GameForParse -&gt; String
+</span><a href="Types.html#date"><span class="hs-identifier hs-var">date</span></a></span><span> </span><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100694"><span class="hs-identifier hs-var">game</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-73"></span><span>        </span><span class="annot"><span class="annottext">home_team_score_ :: Int
+</span><a href="Types.html#home_team_score_"><span class="hs-identifier hs-var">home_team_score_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">GameForParse -&gt; Int
+</span><a href="Types.html#home_team_score"><span class="hs-identifier hs-var">home_team_score</span></a></span><span> </span><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100694"><span class="hs-identifier hs-var">game</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-74"></span><span>        </span><span class="annot"><span class="annottext">visitor_team_score_ :: Int
+</span><a href="Types.html#visitor_team_score_"><span class="hs-identifier hs-var">visitor_team_score_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">GameForParse -&gt; Int
+</span><a href="Types.html#visitor_team_score"><span class="hs-identifier hs-var">visitor_team_score</span></a></span><span> </span><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100694"><span class="hs-identifier hs-var">game</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-75"></span><span>        </span><span class="annot"><span class="annottext">period_ :: Int
+</span><a href="Types.html#period_"><span class="hs-identifier hs-var">period_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">GameForParse -&gt; Int
+</span><a href="Types.html#period"><span class="hs-identifier hs-var">period</span></a></span><span> </span><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100694"><span class="hs-identifier hs-var">game</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-76"></span><span>        </span><span class="annot"><span class="annottext">season_ :: Int
+</span><a href="Types.html#season_"><span class="hs-identifier hs-var">season_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">GameForParse -&gt; Int
+</span><a href="Types.html#season"><span class="hs-identifier hs-var">season</span></a></span><span> </span><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100694"><span class="hs-identifier hs-var">game</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-77"></span><span>        </span><span class="annot"><span class="annottext">status_ :: String
+</span><a href="Types.html#status_"><span class="hs-identifier hs-var">status_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">GameForParse -&gt; String
+</span><a href="Types.html#status"><span class="hs-identifier hs-var">status</span></a></span><span> </span><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100694"><span class="hs-identifier hs-var">game</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-78"></span><span>        </span><span class="annot"><span class="annottext">home_team_fk_ :: Int
+</span><a href="Types.html#home_team_fk_"><span class="hs-identifier hs-var">home_team_fk_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TeamForParse -&gt; Int
+</span><a href="Types.html#_id"><span class="hs-identifier hs-var">_id</span></a></span><span> </span><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100693"><span class="hs-identifier hs-var">home_team_data</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-79"></span><span>        </span><span class="annot"><span class="annottext">visitor_team_fk_ :: Int
+</span><a href="Types.html#visitor_team_fk_"><span class="hs-identifier hs-var">visitor_team_fk_</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">TeamForParse -&gt; Int
+</span><a href="Types.html#_id"><span class="hs-identifier hs-var">_id</span></a></span><span> </span><span class="annot"><span class="annottext">TeamForParse
+</span><a href="#local-6989586621679100691"><span class="hs-identifier hs-var">visitor_team_data</span></a></span><span>
+</span><span id="line-80"></span><span>    </span><span class="hs-special">}</span><span>
+</span><span id="line-81"></span><span>
+</span><span id="line-82"></span><span>    </span><span class="annot"><span class="annottext">forall q. ToRow q =&gt; Connection -&gt; Query -&gt; q -&gt; IO ()
+</span><span class="hs-identifier hs-var">execute</span></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100695"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="annot"><span class="annottext">Query
+</span><span class="hs-string">&quot;INSERT OR REPLACE INTO games VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)&quot;</span></span><span> </span><span class="hs-special">(</span><span>
+</span><span id="line-83"></span><span>        </span><span class="annot"><span class="annottext">Game -&gt; String
+</span><a href="Types.html#date_"><span class="hs-identifier hs-var">date_</span></a></span><span> </span><span class="annot"><span class="annottext">Game
+</span><a href="#local-6989586621679100687"><span class="hs-identifier hs-var">game_data</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-84"></span><span>        </span><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#home_team_score_"><span class="hs-identifier hs-var">home_team_score_</span></a></span><span> </span><span class="annot"><span class="annottext">Game
+</span><a href="#local-6989586621679100687"><span class="hs-identifier hs-var">game_data</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-85"></span><span>        </span><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#visitor_team_score_"><span class="hs-identifier hs-var">visitor_team_score_</span></a></span><span> </span><span class="annot"><span class="annottext">Game
+</span><a href="#local-6989586621679100687"><span class="hs-identifier hs-var">game_data</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-86"></span><span>        </span><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#period_"><span class="hs-identifier hs-var">period_</span></a></span><span> </span><span class="annot"><span class="annottext">Game
+</span><a href="#local-6989586621679100687"><span class="hs-identifier hs-var">game_data</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-87"></span><span>        </span><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#season_"><span class="hs-identifier hs-var">season_</span></a></span><span> </span><span class="annot"><span class="annottext">Game
+</span><a href="#local-6989586621679100687"><span class="hs-identifier hs-var">game_data</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-88"></span><span>        </span><span class="annot"><span class="annottext">Game -&gt; String
+</span><a href="Types.html#status_"><span class="hs-identifier hs-var">status_</span></a></span><span> </span><span class="annot"><span class="annottext">Game
+</span><a href="#local-6989586621679100687"><span class="hs-identifier hs-var">game_data</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-89"></span><span>        </span><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#home_team_fk_"><span class="hs-identifier hs-var">home_team_fk_</span></a></span><span> </span><span class="annot"><span class="annottext">Game
+</span><a href="#local-6989586621679100687"><span class="hs-identifier hs-var">game_data</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-90"></span><span>        </span><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#visitor_team_fk_"><span class="hs-identifier hs-var">visitor_team_fk_</span></a></span><span> </span><span class="annot"><span class="annottext">Game
+</span><a href="#local-6989586621679100687"><span class="hs-identifier hs-var">game_data</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-91"></span><span>
+</span><span id="line-92"></span><span>
+</span><span id="line-93"></span><span class="hs-comment">-- | Gets all the games</span><span>
+</span><span id="line-94"></span><span class="annot"><a href="Database.html#queryAllGames"><span class="hs-identifier hs-type">queryAllGames</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Connection</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Types.html#Game"><span class="hs-identifier hs-type">Game</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-95"></span><span id="queryAllGames"><span class="annot"><span class="annottext">queryAllGames :: Connection -&gt; String -&gt; IO [Game]
+</span><a href="Database.html#queryAllGames"><span class="hs-identifier hs-var hs-var">queryAllGames</span></a></span></span><span> </span><span id="local-6989586621679100671"><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100671"><span class="hs-identifier hs-var">conn</span></a></span></span><span> </span><span id="local-6989586621679100670"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679100670"><span class="hs-identifier hs-var">season</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-96"></span><span>    </span><span id="local-6989586621679100669"><span class="annot"><span class="annottext">[Game]
+</span><a href="#local-6989586621679100669"><span class="hs-identifier hs-var">results</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall r.
+FromRow r =&gt;
+Connection -&gt; Query -&gt; [NamedParam] -&gt; IO [r]
+</span><span class="hs-identifier hs-var">queryNamed</span></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100671"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="annot"><span class="annottext">Query
+</span><span class="hs-string">&quot;SELECT date,home_team_score,visitor_team_score,period,season,status,home_team_fk,visitor_team_fk FROM games WHERE season = :season&quot;</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;:season&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall v. ToField v =&gt; Text -&gt; v -&gt; NamedParam
+</span><span class="hs-operator hs-var">:=</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679100670"><span class="hs-identifier hs-var">season</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>   </span><span>
+</span><span id="line-97"></span><span>    </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
+</span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="annot"><span class="annottext">[Game]
+</span><a href="#local-6989586621679100669"><span class="hs-identifier hs-var">results</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><span class="hs-number">0</span></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-98"></span><span>        </span><span class="annot"><span class="annottext">String -&gt; IO ()
+</span><span class="hs-identifier hs-var">putStrLn</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;No games found! Try downloading the data for the particular season. Returning to menu...&quot;</span></span><span>
+</span><span id="line-99"></span><span>        </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">[Game]
+</span><a href="#local-6989586621679100669"><span class="hs-identifier hs-var">results</span></a></span><span>
+</span><span id="line-100"></span><span>    </span><span class="hs-keyword">else</span><span>
+</span><span id="line-101"></span><span>        </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">[Game]
+</span><a href="#local-6989586621679100669"><span class="hs-identifier hs-var">results</span></a></span><span>
+</span><span id="line-102"></span><span>
+</span><span id="line-103"></span><span>
+</span><span id="line-104"></span><span class="hs-comment">-- | Gets all the teams</span><span>
+</span><span id="line-105"></span><span class="annot"><a href="Database.html#queryAllTeams"><span class="hs-identifier hs-type">queryAllTeams</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Connection</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Types.html#Team"><span class="hs-identifier hs-type">Team</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-106"></span><span id="queryAllTeams"><span class="annot"><span class="annottext">queryAllTeams :: Connection -&gt; IO [Team]
+</span><a href="Database.html#queryAllTeams"><span class="hs-identifier hs-var hs-var">queryAllTeams</span></a></span></span><span> </span><span id="local-6989586621679100664"><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100664"><span class="hs-identifier hs-var">conn</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-107"></span><span>    </span><span id="local-6989586621679100663"><span class="annot"><span class="annottext">[Team]
+</span><a href="#local-6989586621679100663"><span class="hs-identifier hs-var">results</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall r. FromRow r =&gt; Connection -&gt; Query -&gt; IO [r]
+</span><span class="hs-identifier hs-var">query_</span></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100664"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="annot"><span class="annottext">Query
+</span><span class="hs-string">&quot;SELECT * FROM teams&quot;</span></span><span>
+</span><span id="line-108"></span><span>    </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
+</span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="annot"><span class="annottext">[Team]
+</span><a href="#local-6989586621679100663"><span class="hs-identifier hs-var">results</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><span class="hs-number">0</span></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-109"></span><span>        </span><span class="annot"><span class="annottext">String -&gt; IO ()
+</span><span class="hs-identifier hs-var">putStrLn</span></span><span> </span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;No teams found! Try downloading the data for any season. Returning to menu...&quot;</span></span><span>
+</span><span id="line-110"></span><span>        </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">[Team]
+</span><a href="#local-6989586621679100663"><span class="hs-identifier hs-var">results</span></a></span><span>
+</span><span id="line-111"></span><span>    </span><span class="hs-keyword">else</span><span>
+</span><span id="line-112"></span><span>        </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="annot"><span class="annottext">[Team]
+</span><a href="#local-6989586621679100663"><span class="hs-identifier hs-var">results</span></a></span><span>
+</span><span id="line-113"></span><span>
+</span><span id="line-114"></span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- | Saves games</span><span>
+</span><span id="line-116"></span><span class="annot"><a href="Database.html#saveFetchedGames"><span class="hs-identifier hs-type">saveFetchedGames</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Connection</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Types.html#GameForParseArr"><span class="hs-identifier hs-type">GameForParseArr</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-117"></span><span id="saveFetchedGames"><span class="annot"><span class="annottext">saveFetchedGames :: Connection -&gt; GameForParseArr -&gt; IO ()
+</span><a href="Database.html#saveFetchedGames"><span class="hs-identifier hs-var hs-var">saveFetchedGames</span></a></span></span><span> </span><span id="local-6989586621679100661"><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100661"><span class="hs-identifier hs-var">conn</span></a></span></span><span> </span><span id="local-6989586621679100660"><span class="annot"><span class="annottext">GameForParseArr
+</span><a href="#local-6989586621679100660"><span class="hs-identifier hs-var">parsedGames</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-118"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679100659"><span class="annot"><span class="annottext">list_of_games :: [GameForParse]
+</span><a href="#local-6989586621679100659"><span class="hs-identifier hs-var hs-var">list_of_games</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">GameForParseArr -&gt; [GameForParse]
+</span><a href="Types.html#games"><span class="hs-identifier hs-var">games</span></a></span><span> </span><span class="annot"><span class="annottext">GameForParseArr
+</span><a href="#local-6989586621679100660"><span class="hs-identifier hs-var">parsedGames</span></a></span><span>
+</span><span id="line-119"></span><span>    </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a. Foldable t =&gt; t a -&gt; Int
+</span><span class="hs-identifier hs-var">length</span></span><span> </span><span class="annot"><span class="annottext">[GameForParse]
+</span><a href="#local-6989586621679100659"><span class="hs-identifier hs-var">list_of_games</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;</span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><span class="hs-number">1</span></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-120"></span><span>        </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679100656"><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100656"><span class="hs-identifier hs-var">game_to_save</span></a></span></span><span class="annot"><span class="hs-glyph hs-type">:</span></span><span id="local-6989586621679100655"><span class="annot"><span class="annottext">[GameForParse]
+</span><a href="#local-6989586621679100655"><span class="hs-identifier hs-var">other_games</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[GameForParse]
+</span><a href="#local-6989586621679100659"><span class="hs-identifier hs-var">list_of_games</span></a></span><span>
+</span><span id="line-121"></span><span>        </span><span class="annot"><span class="annottext">Connection -&gt; GameForParse -&gt; IO ()
+</span><a href="Database.html#createGame"><span class="hs-identifier hs-var">createGame</span></a></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100661"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100656"><span class="hs-identifier hs-var">game_to_save</span></a></span><span>
+</span><span id="line-122"></span><span>        </span><span class="annot"><span class="annottext">Connection -&gt; GameForParseArr -&gt; IO ()
+</span><a href="Database.html#saveFetchedGames"><span class="hs-identifier hs-var">saveFetchedGames</span></a></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100661"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[GameForParse] -&gt; GameForParseArr
+</span><a href="Types.html#GameForParseArr"><span class="hs-identifier hs-var">GameForParseArr</span></a></span><span> </span><span class="annot"><span class="annottext">[GameForParse]
+</span><a href="#local-6989586621679100655"><span class="hs-identifier hs-var">other_games</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-123"></span><span>    </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-124"></span><span>        </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679100653"><span class="annot"><span class="annottext">game_to_save :: GameForParse
+</span><a href="#local-6989586621679100653"><span class="hs-identifier hs-var hs-var">game_to_save</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; a
+</span><span class="hs-identifier hs-var">head</span></span><span> </span><span class="annot"><span class="annottext">[GameForParse]
+</span><a href="#local-6989586621679100659"><span class="hs-identifier hs-var">list_of_games</span></a></span><span>
+</span><span id="line-125"></span><span>        </span><span class="annot"><span class="annottext">Connection -&gt; GameForParse -&gt; IO ()
+</span><a href="Database.html#createGame"><span class="hs-identifier hs-var">createGame</span></a></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100661"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="annot"><span class="annottext">GameForParse
+</span><a href="#local-6989586621679100653"><span class="hs-identifier hs-var">game_to_save</span></a></span><span>
+</span><span id="line-126"></span><span>        </span><span class="annot"><span class="annottext">forall a. Show a =&gt; a -&gt; IO ()
+</span><span class="hs-identifier hs-var">print</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
+</span><span class="hs-string">&quot;Saved all games to DB.&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-127"></span><span>
+</span><span id="line-128"></span><span class="hs-comment">-- | Fetches fullname and name for teams whose matches id of home teams in games</span><span>
+</span><span id="line-129"></span><span class="annot"><a href="Database.html#querySelectedGames"><span class="hs-identifier hs-type">querySelectedGames</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Connection</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Types.html#SpecificGame"><span class="hs-identifier hs-type">SpecificGame</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-130"></span><span id="querySelectedGames"><span class="annot"><span class="annottext">querySelectedGames :: Connection -&gt; String -&gt; IO [SpecificGame]
+</span><a href="Database.html#querySelectedGames"><span class="hs-identifier hs-var hs-var">querySelectedGames</span></a></span></span><span> </span><span id="local-6989586621679100651"><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100651"><span class="hs-identifier hs-var">conn</span></a></span></span><span> </span><span id="local-6989586621679100650"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679100650"><span class="hs-identifier hs-var">team_num</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-131"></span><span>    </span><span class="annot"><span class="annottext">forall q r.
+(ToRow q, FromRow r) =&gt;
+Connection -&gt; Query -&gt; q -&gt; IO [r]
+</span><span class="hs-identifier hs-var">query</span></span><span> </span><span class="annot"><span class="annottext">Connection
+</span><a href="#local-6989586621679100651"><span class="hs-identifier hs-var">conn</span></a></span><span> </span><span class="annot"><span class="annottext">Query
+</span><span class="hs-string">&quot;SELECT full_name, name from teams inner join games on teams.team_id_ == games.home_team_fk where home_team_fk = ?&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Only a
+</span><span class="hs-identifier hs-var">Only</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679100650"><span class="hs-identifier hs-var">team_num</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-132"></span></pre></body></html>

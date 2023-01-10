@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE DeriveGeneric #-}</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-comment">{-|
+Module      : Types
+Description : Contains the data types used for this project
+License     : GPL-3
+-}</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Types</span><span> </span><span class="hs-special">(</span><span>
+</span><span id="line-11"></span><span>    </span><span class="annot"><a href="Types.html#Game"><span class="hs-identifier">Game</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-12"></span><span>    </span><span class="annot"><a href="Types.html#Team"><span class="hs-identifier">Team</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-13"></span><span>    </span><span class="annot"><a href="Types.html#GameForParseArr"><span class="hs-identifier">GameForParseArr</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-14"></span><span>    </span><span class="annot"><a href="Types.html#TeamForParse"><span class="hs-identifier">TeamForParse</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-15"></span><span>    </span><span class="annot"><a href="Types.html#GameForParse"><span class="hs-identifier">GameForParse</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-16"></span><span>    </span><span class="annot"><a href="Types.html#SpecificGame"><span class="hs-identifier">SpecificGame</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-18"></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Generics</span></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Database.SQLite.Simple.FromRow</span></span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Database.SQLite.Simple.ToRow</span></span><span>
+</span><span id="line-22"></span><span>
+</span><span id="line-23"></span><span id="local-6989586621679099293"><span id="local-6989586621679099294"></span></span><span class="hs-keyword">data</span><span> </span><span id="Game"><span class="annot"><a href="Types.html#Game"><span class="hs-identifier hs-var">Game</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Game"><span class="annot"><a href="Types.html#Game"><span class="hs-identifier hs-var">Game</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-24"></span><span>    </span><span id="date_"><span class="annot"><span class="annottext">Game -&gt; String
+</span><a href="Types.html#date_"><span class="hs-identifier hs-var hs-var">date_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-25"></span><span>    </span><span id="home_team_score_"><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#home_team_score_"><span class="hs-identifier hs-var hs-var">home_team_score_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-26"></span><span>    </span><span id="visitor_team_score_"><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#visitor_team_score_"><span class="hs-identifier hs-var hs-var">visitor_team_score_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-27"></span><span>    </span><span id="period_"><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#period_"><span class="hs-identifier hs-var hs-var">period_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-28"></span><span>    </span><span id="season_"><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#season_"><span class="hs-identifier hs-var hs-var">season_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-29"></span><span>    </span><span id="status_"><span class="annot"><span class="annottext">Game -&gt; String
+</span><a href="Types.html#status_"><span class="hs-identifier hs-var hs-var">status_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-30"></span><span>    </span><span id="home_team_fk_"><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#home_team_fk_"><span class="hs-identifier hs-var hs-var">home_team_fk_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-31"></span><span>    </span><span id="visitor_team_fk_"><span class="annot"><span class="annottext">Game -&gt; Int
+</span><a href="Types.html#visitor_team_fk_"><span class="hs-identifier hs-var hs-var">visitor_team_fk_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
+</span><span id="line-32"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679099265"><span id="local-6989586621679099267"><span id="local-6989586621679099282"><span class="annot"><span class="annottext">Int -&gt; Game -&gt; ShowS
+[Game] -&gt; ShowS
+Game -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Game] -&gt; ShowS
+$cshowList :: [Game] -&gt; ShowS
+show :: Game -&gt; String
+$cshow :: Game -&gt; String
+showsPrec :: Int -&gt; Game -&gt; ShowS
+$cshowsPrec :: Int -&gt; Game -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x. Rep Game x -&gt; Game
+forall x. Game -&gt; Rep Game x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x. Rep Game x -&gt; Game
+$cfrom :: forall x. Game -&gt; Rep Game x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span id="local-6989586621679099257"><span id="local-6989586621679099258"></span></span><span class="hs-keyword">data</span><span> </span><span id="Team"><span class="annot"><a href="Types.html#Team"><span class="hs-identifier hs-var">Team</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Team"><span class="annot"><a href="Types.html#Team"><span class="hs-identifier hs-var">Team</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-35"></span><span>    </span><span id="team_id_"><span class="annot"><span class="annottext">Team -&gt; Int
+</span><a href="Types.html#team_id_"><span class="hs-identifier hs-var hs-var">team_id_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-36"></span><span>    </span><span id="abbreviation_"><span class="annot"><span class="annottext">Team -&gt; String
+</span><a href="Types.html#abbreviation_"><span class="hs-identifier hs-var hs-var">abbreviation_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-37"></span><span>    </span><span id="city_"><span class="annot"><span class="annottext">Team -&gt; String
+</span><a href="Types.html#city_"><span class="hs-identifier hs-var hs-var">city_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-38"></span><span>    </span><span id="conference_"><span class="annot"><span class="annottext">Team -&gt; String
+</span><a href="Types.html#conference_"><span class="hs-identifier hs-var hs-var">conference_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-39"></span><span>    </span><span id="division_"><span class="annot"><span class="annottext">Team -&gt; String
+</span><a href="Types.html#division_"><span class="hs-identifier hs-var hs-var">division_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-40"></span><span>    </span><span id="full_name_"><span class="annot"><span class="annottext">Team -&gt; String
+</span><a href="Types.html#full_name_"><span class="hs-identifier hs-var hs-var">full_name_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-41"></span><span>    </span><span id="name_"><span class="annot"><span class="annottext">Team -&gt; String
+</span><a href="Types.html#name_"><span class="hs-identifier hs-var hs-var">name_</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-42"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679099234"><span id="local-6989586621679099236"><span id="local-6989586621679099247"><span class="annot"><span class="annottext">Int -&gt; Team -&gt; ShowS
+[Team] -&gt; ShowS
+Team -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Team] -&gt; ShowS
+$cshowList :: [Team] -&gt; ShowS
+show :: Team -&gt; String
+$cshow :: Team -&gt; String
+showsPrec :: Int -&gt; Team -&gt; ShowS
+$cshowsPrec :: Int -&gt; Team -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x. Rep Team x -&gt; Team
+forall x. Team -&gt; Rep Team x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x. Rep Team x -&gt; Team
+$cfrom :: forall x. Team -&gt; Rep Team x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>
+</span><span id="line-44"></span><span id="local-6989586621679099229"><span id="local-6989586621679099230"></span></span><span class="hs-keyword">data</span><span> </span><span id="TeamForParse"><span class="annot"><a href="Types.html#TeamForParse"><span class="hs-identifier hs-var">TeamForParse</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="TeamForParse"><span class="annot"><a href="Types.html#TeamForParse"><span class="hs-identifier hs-var">TeamForParse</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-45"></span><span>    </span><span id="_id"><span class="annot"><span class="annottext">TeamForParse -&gt; Int
+</span><a href="Types.html#_id"><span class="hs-identifier hs-var hs-var">_id</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-46"></span><span>    </span><span id="abbreviation"><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#abbreviation"><span class="hs-identifier hs-var hs-var">abbreviation</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-47"></span><span>    </span><span id="city"><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#city"><span class="hs-identifier hs-var hs-var">city</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-48"></span><span>    </span><span id="conference"><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#conference"><span class="hs-identifier hs-var hs-var">conference</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-49"></span><span>    </span><span id="division"><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#division"><span class="hs-identifier hs-var hs-var">division</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-50"></span><span>    </span><span id="full_name"><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#full_name"><span class="hs-identifier hs-var hs-var">full_name</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-51"></span><span>    </span><span id="name"><span class="annot"><span class="annottext">TeamForParse -&gt; String
+</span><a href="Types.html#name"><span class="hs-identifier hs-var hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-52"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679099206"><span id="local-6989586621679099208"><span id="local-6989586621679099219"><span class="annot"><span class="annottext">Int -&gt; TeamForParse -&gt; ShowS
+[TeamForParse] -&gt; ShowS
+TeamForParse -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [TeamForParse] -&gt; ShowS
+$cshowList :: [TeamForParse] -&gt; ShowS
+show :: TeamForParse -&gt; String
+$cshow :: TeamForParse -&gt; String
+showsPrec :: Int -&gt; TeamForParse -&gt; ShowS
+$cshowsPrec :: Int -&gt; TeamForParse -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x. Rep TeamForParse x -&gt; TeamForParse
+forall x. TeamForParse -&gt; Rep TeamForParse x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x. Rep TeamForParse x -&gt; TeamForParse
+$cfrom :: forall x. TeamForParse -&gt; Rep TeamForParse x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span id="local-6989586621679099201"><span id="local-6989586621679099202"></span></span><span class="hs-keyword">data</span><span> </span><span id="GameForParse"><span class="annot"><a href="Types.html#GameForParse"><span class="hs-identifier hs-var">GameForParse</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="GameForParse"><span class="annot"><a href="Types.html#GameForParse"><span class="hs-identifier hs-var">GameForParse</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-55"></span><span>    </span><span id="date"><span class="annot"><span class="annottext">GameForParse -&gt; String
+</span><a href="Types.html#date"><span class="hs-identifier hs-var hs-var">date</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-56"></span><span>    </span><span id="period"><span class="annot"><span class="annottext">GameForParse -&gt; Int
+</span><a href="Types.html#period"><span class="hs-identifier hs-var hs-var">period</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-57"></span><span>    </span><span id="season"><span class="annot"><span class="annottext">GameForParse -&gt; Int
+</span><a href="Types.html#season"><span class="hs-identifier hs-var hs-var">season</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-58"></span><span>    </span><span id="postseason"><span class="annot"><span class="annottext">GameForParse -&gt; Bool
+</span><a href="Types.html#postseason"><span class="hs-identifier hs-var hs-var">postseason</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span class="hs-special">,</span><span>
+</span><span id="line-59"></span><span>    </span><span id="status"><span class="annot"><span class="annottext">GameForParse -&gt; String
+</span><a href="Types.html#status"><span class="hs-identifier hs-var hs-var">status</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-60"></span><span>    </span><span id="time"><span class="annot"><span class="annottext">GameForParse -&gt; String
+</span><a href="Types.html#time"><span class="hs-identifier hs-var hs-var">time</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-61"></span><span>    </span><span id="home_team"><span class="annot"><span class="annottext">GameForParse -&gt; TeamForParse
+</span><a href="Types.html#home_team"><span class="hs-identifier hs-var hs-var">home_team</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Types.html#TeamForParse"><span class="hs-identifier hs-type">TeamForParse</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-62"></span><span>    </span><span id="visitor_team"><span class="annot"><span class="annottext">GameForParse -&gt; TeamForParse
+</span><a href="Types.html#visitor_team"><span class="hs-identifier hs-var hs-var">visitor_team</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Types.html#TeamForParse"><span class="hs-identifier hs-type">TeamForParse</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-63"></span><span>    </span><span id="home_team_score"><span class="annot"><span class="annottext">GameForParse -&gt; Int
+</span><a href="Types.html#home_team_score"><span class="hs-identifier hs-var hs-var">home_team_score</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">,</span><span>
+</span><span id="line-64"></span><span>    </span><span id="visitor_team_score"><span class="annot"><span class="annottext">GameForParse -&gt; Int
+</span><a href="Types.html#visitor_team_score"><span class="hs-identifier hs-var hs-var">visitor_team_score</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
+</span><span id="line-65"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679099171"><span id="local-6989586621679099173"><span id="local-6989586621679099188"><span class="annot"><span class="annottext">Int -&gt; GameForParse -&gt; ShowS
+[GameForParse] -&gt; ShowS
+GameForParse -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [GameForParse] -&gt; ShowS
+$cshowList :: [GameForParse] -&gt; ShowS
+show :: GameForParse -&gt; String
+$cshow :: GameForParse -&gt; String
+showsPrec :: Int -&gt; GameForParse -&gt; ShowS
+$cshowsPrec :: Int -&gt; GameForParse -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x. Rep GameForParse x -&gt; GameForParse
+forall x. GameForParse -&gt; Rep GameForParse x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x. Rep GameForParse x -&gt; GameForParse
+$cfrom :: forall x. GameForParse -&gt; Rep GameForParse x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span>
+</span><span id="line-67"></span><span id="local-6989586621679099166"><span id="local-6989586621679099167"></span></span><span class="hs-keyword">data</span><span> </span><span id="GameForParseArr"><span class="annot"><a href="Types.html#GameForParseArr"><span class="hs-identifier hs-var">GameForParseArr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="GameForParseArr"><span class="annot"><a href="Types.html#GameForParseArr"><span class="hs-identifier hs-var">GameForParseArr</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-68"></span><span>    </span><span id="games"><span class="annot"><span class="annottext">GameForParseArr -&gt; [GameForParse]
+</span><a href="Types.html#games"><span class="hs-identifier hs-var hs-var">games</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="Types.html#GameForParse"><span class="hs-identifier hs-type">GameForParse</span></a></span><span class="hs-special">]</span><span>
+</span><span id="line-69"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679099155"><span id="local-6989586621679099157"><span id="local-6989586621679099162"><span class="annot"><span class="annottext">Int -&gt; GameForParseArr -&gt; ShowS
+[GameForParseArr] -&gt; ShowS
+GameForParseArr -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [GameForParseArr] -&gt; ShowS
+$cshowList :: [GameForParseArr] -&gt; ShowS
+show :: GameForParseArr -&gt; String
+$cshow :: GameForParseArr -&gt; String
+showsPrec :: Int -&gt; GameForParseArr -&gt; ShowS
+$cshowsPrec :: Int -&gt; GameForParseArr -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x. Rep GameForParseArr x -&gt; GameForParseArr
+forall x. GameForParseArr -&gt; Rep GameForParseArr x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x. Rep GameForParseArr x -&gt; GameForParseArr
+$cfrom :: forall x. GameForParseArr -&gt; Rep GameForParseArr x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span><span>
+</span><span id="line-71"></span><span id="local-6989586621679099150"><span id="local-6989586621679099151"></span></span><span class="hs-keyword">data</span><span> </span><span id="SpecificGame"><span class="annot"><a href="Types.html#SpecificGame"><span class="hs-identifier hs-var">SpecificGame</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SpecificGame"><span class="annot"><a href="Types.html#SpecificGame"><span class="hs-identifier hs-var">SpecificGame</span></a></span></span><span> </span><span class="hs-special">{</span><span>
+</span><span id="line-72"></span><span>    </span><span id="full_name__"><span class="annot"><span class="annottext">SpecificGame -&gt; String
+</span><a href="Types.html#full_name__"><span class="hs-identifier hs-var hs-var">full_name__</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span class="hs-special">,</span><span>
+</span><span id="line-73"></span><span>    </span><span id="name__"><span class="annot"><span class="annottext">SpecificGame -&gt; String
+</span><a href="Types.html#name__"><span class="hs-identifier hs-var hs-var">name__</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-74"></span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679099137"><span id="local-6989586621679099139"><span id="local-6989586621679099145"><span class="annot"><span class="annottext">Int -&gt; SpecificGame -&gt; ShowS
+[SpecificGame] -&gt; ShowS
+SpecificGame -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [SpecificGame] -&gt; ShowS
+$cshowList :: [SpecificGame] -&gt; ShowS
+show :: SpecificGame -&gt; String
+$cshow :: SpecificGame -&gt; String
+showsPrec :: Int -&gt; SpecificGame -&gt; ShowS
+$cshowsPrec :: Int -&gt; SpecificGame -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall x. Rep SpecificGame x -&gt; SpecificGame
+forall x. SpecificGame -&gt; Rep SpecificGame x
+forall a.
+(forall x. a -&gt; Rep a x) -&gt; (forall x. Rep a x -&gt; a) -&gt; Generic a
+$cto :: forall x. Rep SpecificGame x -&gt; SpecificGame
+$cfrom :: forall x. SpecificGame -&gt; Rep SpecificGame x
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">Generic</span></span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span>
+</span><span id="line-76"></span><span>
+</span><span id="line-77"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="annot"><a href="Types.html#Game"><span class="hs-identifier hs-type">Game</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-78"></span><span>    </span><span id="local-6989586621679099110"><span class="annot"><span class="annottext">fromRow :: RowParser Game
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Int -&gt; Int -&gt; Int -&gt; Int -&gt; String -&gt; Int -&gt; Int -&gt; Game
+</span><a href="Types.html#Game"><span class="hs-identifier hs-var">Game</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span>
+</span><span id="line-79"></span><span>
+</span><span id="line-80"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="annot"><a href="Types.html#Game"><span class="hs-identifier hs-type">Game</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-81"></span><span>    </span><span id="local-6989586621679099091"><span class="annot"><span class="annottext">toRow :: Game -&gt; [SQLData]
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Types.html#Game"><span class="hs-identifier hs-type">Game</span></a></span><span> </span><span id="local-6989586621679099089"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099089"><span class="hs-identifier hs-var">date_</span></a></span></span><span> </span><span id="local-6989586621679099088"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099088"><span class="hs-identifier hs-var">home_team_score_</span></a></span></span><span> </span><span id="local-6989586621679099087"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099087"><span class="hs-identifier hs-var">visitor_team_score_</span></a></span></span><span> </span><span id="local-6989586621679099086"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099086"><span class="hs-identifier hs-var">period_</span></a></span></span><span> </span><span id="local-6989586621679099085"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099085"><span class="hs-identifier hs-var">season_</span></a></span></span><span> </span><span id="local-6989586621679099084"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099084"><span class="hs-identifier hs-var">status_</span></a></span></span><span> </span><span id="local-6989586621679099083"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099083"><span class="hs-identifier hs-var">home_team_fk_</span></a></span></span><span> </span><span id="local-6989586621679099082"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099082"><span class="hs-identifier hs-var">visitor_team_fk_</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-82"></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. ToRow a =&gt; a -&gt; [SQLData]
+</span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099089"><span class="hs-identifier hs-var">date_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099086"><span class="hs-identifier hs-var">period_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099088"><span class="hs-identifier hs-var">home_team_score_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099087"><span class="hs-identifier hs-var">visitor_team_score_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099085"><span class="hs-identifier hs-var">season_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099084"><span class="hs-identifier hs-var">status_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099083"><span class="hs-identifier hs-var">home_team_fk_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099082"><span class="hs-identifier hs-var">visitor_team_fk_</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-83"></span><span>
+</span><span id="line-84"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="annot"><a href="Types.html#Team"><span class="hs-identifier hs-type">Team</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-85"></span><span>    </span><span id="local-6989586621679099065"><span class="annot"><span class="annottext">fromRow :: RowParser Team
+</span><a href="#local-6989586621679099065"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+-&gt; String -&gt; String -&gt; String -&gt; String -&gt; String -&gt; String -&gt; Team
+</span><a href="Types.html#Team"><span class="hs-identifier hs-var">Team</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span>
+</span><span id="line-86"></span><span>
+</span><span id="line-87"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="annot"><a href="Types.html#Team"><span class="hs-identifier hs-type">Team</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-88"></span><span>    </span><span id="local-6989586621679099053"><span class="annot"><span class="annottext">toRow :: Team -&gt; [SQLData]
+</span><a href="#local-6989586621679099053"><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Types.html#Team"><span class="hs-identifier hs-type">Team</span></a></span><span> </span><span id="local-6989586621679099052"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099052"><span class="hs-identifier hs-var">team_id_</span></a></span></span><span> </span><span id="local-6989586621679099051"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099051"><span class="hs-identifier hs-var">abbreviation_</span></a></span></span><span> </span><span id="local-6989586621679099050"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099050"><span class="hs-identifier hs-var">city_</span></a></span></span><span> </span><span id="local-6989586621679099049"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099049"><span class="hs-identifier hs-var">conference_</span></a></span></span><span> </span><span id="local-6989586621679099048"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099048"><span class="hs-identifier hs-var">division_</span></a></span></span><span> </span><span id="local-6989586621679099047"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099047"><span class="hs-identifier hs-var">full_name_</span></a></span></span><span> </span><span id="local-6989586621679099046"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099046"><span class="hs-identifier hs-var">name_</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-89"></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. ToRow a =&gt; a -&gt; [SQLData]
+</span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679099052"><span class="hs-identifier hs-var">team_id_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099051"><span class="hs-identifier hs-var">abbreviation_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099050"><span class="hs-identifier hs-var">city_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099049"><span class="hs-identifier hs-var">conference_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099048"><span class="hs-identifier hs-var">division_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099047"><span class="hs-identifier hs-var">full_name_</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099046"><span class="hs-identifier hs-var">name_</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-90"></span><span>
+</span><span id="line-91"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">FromRow</span></span><span> </span><span class="annot"><a href="Types.html#SpecificGame"><span class="hs-identifier hs-type">SpecificGame</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-92"></span><span>    </span><span id="local-6989586621679099039"><span class="annot"><span class="annottext">fromRow :: RowParser SpecificGame
+</span><a href="#local-6989586621679099039"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRow</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; SpecificGame
+</span><a href="Types.html#SpecificGame"><span class="hs-identifier hs-var">SpecificGame</span></a></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;$&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Applicative f =&gt; f (a -&gt; b) -&gt; f a -&gt; f b
+</span><span class="hs-operator hs-var">&lt;*&gt;</span></span><span> </span><span class="annot"><span class="annottext">forall a. FromField a =&gt; RowParser a
+</span><span class="hs-identifier hs-var">field</span></span><span>
+</span><span id="line-93"></span><span>
+</span><span id="line-94"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ToRow</span></span><span> </span><span class="annot"><a href="Types.html#SpecificGame"><span class="hs-identifier hs-type">SpecificGame</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-95"></span><span>    </span><span id="local-6989586621679099032"><span class="annot"><span class="annottext">toRow :: SpecificGame -&gt; [SQLData]
+</span><a href="#local-6989586621679099032"><span class="hs-identifier hs-var hs-var hs-var hs-var">toRow</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Types.html#SpecificGame"><span class="hs-identifier hs-type">SpecificGame</span></a></span><span> </span><span id="local-6989586621679099031"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099031"><span class="hs-identifier hs-var">full_name__</span></a></span></span><span> </span><span id="local-6989586621679099030"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099030"><span class="hs-identifier hs-var">name__</span></a></span></span><span class="hs-special">)</span><span>
+</span><span id="line-96"></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. ToRow a =&gt; a -&gt; [SQLData]
+</span><span class="hs-identifier hs-var">toRow</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099031"><span class="hs-identifier hs-var">full_name__</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679099030"><span class="hs-identifier hs-var">name__</span></a></span><span class="hs-special">)</span><span> </span><span>
+</span><span id="line-97"></span><span>
+</span><span id="line-98"></span></pre></body></html>

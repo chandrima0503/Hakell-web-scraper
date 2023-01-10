@@ -1,0 +1,24 @@
+? /Users/chandrimamukherjee/.stack/programs/x86_64-osx/ghc-9.2.5/lib/ghc-9.2.5/lib/x86_64-osx-ghc-9.2.5/rts-1.0.2/include/ghcversion.h
+: hash: 0b01480d9e386cfc01bf5430e953ac8a8bb8de1a8e65ea4d8e19bce3c3718005
+? /Users/chandrimamukherjee/Documents/gitrepos/haskell-project/.stack-work/dist/x86_64-osx/Cabal-3.6.3.0/build/autogen/Paths_haskell_project.hs
+: hash: 7149d3a02ce841d7a72f619794c75d0ac7c24ccb494ecb4bcfa6dc849b725719
+? /Users/chandrimamukherjee/Documents/gitrepos/haskell-project/.stack-work/dist/x86_64-osx/Cabal-3.6.3.0/build/autogen/cabal_macros.h
+: hash: 7de969a986f57d4d49ee17dc4aa54bcf912a8c48cda744a496902044608e8ab6
+/Users/chandrimamukherjee/Documents/gitrepos/haskell-project/CHANGELOG.md:
+  hash: 4f827adb3b3becb6146708bd7fea9766fafdd6b18cff37f088c12afad0a8c448
+/Users/chandrimamukherjee/Documents/gitrepos/haskell-project/README.md:
+  hash: abe6a2816161489c842d40815010e3d38d7c4487c10573c3f37e91abbf24e461
+/Users/chandrimamukherjee/Documents/gitrepos/haskell-project/haskell-project.cabal:
+  hash: 1aeb7303939b905975fd162121eeb2f3bd3414a2983fac11ce9a55b23eda8d38
+/Users/chandrimamukherjee/Documents/gitrepos/haskell-project/package.yaml:
+  hash: 69d4482fcfa94e454bcc97a5c5893fa7c9f4e5b647db2fc9f4747590adecf1a6
+/Users/chandrimamukherjee/Documents/gitrepos/haskell-project/src/Database.hs:
+  hash: c4beca70261ebb4b103bdf98a9e2eb34b2bbbabde31ce2a6ae0f8aea755a3cb5
+/Users/chandrimamukherjee/Documents/gitrepos/haskell-project/src/Fetch.hs:
+  hash: 041494b0e934a930e91a3b4da3a09edbf1dd726f361ea79fed5571144ff2db9d
+/Users/chandrimamukherjee/Documents/gitrepos/haskell-project/src/Parse.hs:
+  hash: 9cb396695dcf4fb62e778368050d0062a4163121d92870bd0a46f037f5ba7940
+/Users/chandrimamukherjee/Documents/gitrepos/haskell-project/src/Types.hs:
+  hash: 094b9c997c3595dc6c06676afc9e15723e52a9e10a02518ea30a6fbf8fb4db39
+/Users/chandrimamukherjee/Documents/gitrepos/haskell-project/src/WebAPI.hs:
+  hash: 83434af33a8074921d6cedabd4be6c487545dec8915e24acad5862c8c029ec93
